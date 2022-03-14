@@ -21,7 +21,6 @@ export interface CartProviderProps {
 
 interface CartProvider {
   cart: Product[];
-  totalCart: number;
   totalItems: number;
   Contains: (id: number) => boolean;
   addProduct: (cart: Product) => void;
@@ -30,7 +29,6 @@ interface CartProvider {
 
 const CartContext = createContext<CartProvider>({
   cart: [],
-  totalCart: 0,
   totalItems: 0,
   addProduct: () => {},
   Contains: () => false,
@@ -39,16 +37,22 @@ const CartContext = createContext<CartProvider>({
 
 export function CartProvider({ children }: CartProviderProps) {
   const [cart, setCart] = useState<Product[]>([]);
-  const [totalCart, setTotalCart] = useState(0);
   const [totalItems, seTotalItems] = useState(0);
 
   const addProduct = (product: Product) => {
     setCart([...cart, product]);
+    sessionStorage.setItem("@cart", JSON.stringify([...cart, product]));
   };
 
   useEffect(() => {
-    const total = cart.reduce((acc, cur) => acc + cur.price, 0);
-    setTotalCart(total);
+    const cartStorage = sessionStorage.getItem("@cart");
+    if (cartStorage) {
+      setCart(JSON.parse(cartStorage));
+    }
+  }, []);
+
+  useEffect(() => {
+    sessionStorage.setItem("@cart", JSON.stringify(cart));
   }, [cart]);
 
   useEffect(() => {
@@ -61,7 +65,7 @@ export function CartProvider({ children }: CartProviderProps) {
 
   return (
     <CartContext.Provider
-      value={{ setCart, cart, totalCart, totalItems, Contains, addProduct }}
+      value={{ setCart, cart, totalItems, Contains, addProduct }}
     >
       {children}
     </CartContext.Provider>
