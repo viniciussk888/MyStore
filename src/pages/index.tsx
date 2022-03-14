@@ -3,6 +3,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
 import ProductCard from "../components/ProductCard";
+import { GetStaticProps } from "next";
+import productsMock from '../utils/mock.json'
 
 interface Product {
   id: number;
@@ -13,16 +15,12 @@ interface Product {
   image: string;
 }
 
-export default function Home() {
-  const [products, setProducts] = useState<Product[]>([]);
+interface Props {
+  products: Product[];
+}
 
-  useEffect(() => {
-    async function fetchData() {
-      const response = await axios.get("/api/products");
-      setProducts(response.data);
-    }
-    fetchData();
-  }, []);
+
+export default function Home({products}:Props) {
 
   return (
     <Box>
@@ -36,7 +34,7 @@ export default function Home() {
         >
           Veja nosso catálogo
         </Heading>
-        {products.length > 0 ? (
+        {products?.length > 0 ? (
           <Box
             overflow="auto"
             display="grid"
@@ -70,3 +68,24 @@ export default function Home() {
     </Box>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  const response = await axios.get("https://fakestoreapi.com/products");
+  const products = response.data;
+
+  if(response.status === 200) {
+    return {
+      props: {
+        products,
+      },
+      revalidate: 60, //1min
+    };
+  }else{
+    return {
+      props: {
+        products: productsMock,
+      },
+      revalidate: 60, //1min
+    };
+  }
+};
