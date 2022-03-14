@@ -4,7 +4,7 @@ import { RiShoppingCart2Line } from "react-icons/ri";
 import { useCart } from "../../contexts/CartContext";
 import ModalCart from "../ModalCart";
 
-export function NotificationsNav() {
+export function CartNav() {
   const { totalItems } = useCart();
   const [isOpen, setIsOpen] = useState(false);
 
