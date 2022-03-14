@@ -103,7 +103,7 @@ export default function ModalCart({ open,setIsOpen }: ModalCartProps) {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader color="black">Carrinho</ModalHeader>
-          <ModalBody>
+          <ModalBody overflow='auto'>
             <Table variant="striped">
               <TableCaption color="black" fontSize={20}>
                 Total: R$ {sumTotalValue().toFixed(2)}
