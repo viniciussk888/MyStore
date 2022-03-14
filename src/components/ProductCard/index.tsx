@@ -89,7 +89,7 @@ export default function ProductCard({
           />
         </Box>
         <Stack pt={10} align={"center"}>
-          <Text color={"gray.900"} fontSize={"sm"} textTransform={"uppercase"}>
+          <Text id="title" color={"gray.900"} fontSize={"sm"} textTransform={"uppercase"}>
             {title}
           </Text>
           <Text color={"gray.500"} fontSize={"sm"}>
